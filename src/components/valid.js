@@ -21,16 +21,20 @@ const styles = {
   }
 };
 const valid = props => {
-  const pickle = props.validated ? (
-    <div style={styles.success}>
-      <h2> {props.validated ? 'Email address is valid' : null}</h2>
-    </div>
-  ) : (
-    <div style={styles.fail}>
-      <h2>{props.validated ? null : 'Email address is not valid'}</h2>
-    </div>
-  );
+  const message = props.validation.outcome
+    ? (
+      <div style={styles.success}>
+        <h2>
+          {props.validation.message}
+        </h2>
+      </div>
+    )
+    : (
+      <div style={styles.fail}>
+        <h2>{props.validation.message}</h2>
+      </div>
+    );
 
-  return pickle;
+  return message;
 };
 export default valid;
