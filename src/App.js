@@ -7,6 +7,11 @@ const style = {
   paper: {
     padding: '30px',
     margin: '30px'
+  },
+  bg: {
+    backgroundColor: 'purple',
+    padding: '0px',
+    margin: '0px'
   }
 };
 
@@ -81,7 +86,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <Grid>
         <Grid container style={style.paper}>
           <Paper style={style.paper}>
             <Grid item xs={6} style={style.paper}>
@@ -102,7 +107,7 @@ class App extends Component {
             ) : null}
           </Paper>
         </Grid>
-      </div>
+      </Grid>
     );
   }
 }
