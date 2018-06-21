@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Grid, Paper, Button} from '@material-ui/core';
 import 'typeface-roboto';
 import Valid from './components/valid';
+import validChars from './validChars'
 
 const style = {
   paper: {
@@ -53,6 +54,11 @@ const validation = email => {
     // reusable variables for quick reference l1ater
     let localName = workingEmail.split('@')[0];
     let domain = workingEmail.split('@')[1];
+    let domainName = domain.split('.')[
+      domain
+        .split('.')
+        .length - 2
+    ]
     let tld = domain.split('.')[
       domain
         .split('.')
@@ -75,22 +81,71 @@ const validation = email => {
       return {message: `${email}'s domain has less than one dot`, outcome: false}
     }
 
-    // function to check for valid charachters in usernames but outside the comments
-    // (if present) with no quotes function to check for valid charachters in
-    // username but outside the comments (if present) with no quotes function to
-    // check for valid charachters in domain and TLD but outside the comments(if
-    // present) domain has at least 2 charachters uppercase and lowercase Latin
-    // letters A to Z and a to z; digits 0 to 9, provided that top-level domain
-    // names are not all-numeric; hyphen -, provided that it is not the first or
-    // last character. check to see that the domain and TLD only have alphanumeric
-    // charachters Email is valid with comments
+    // function to check for valid charachters in usernames check for valid
+    // charachters in domain and TLD
+    //
+
+    let domainValidChar = (dom) => {
+      let domArray = dom.split("")
+      let result = true
+
+      domArray.forEach((letter) => {
+        if (validChars.domain.indexOf(letter.toLowerCase()) < 0) {
+          console.log("found illegal char")
+          result = false
+        }
+      })
+      if (domArray[0] === '.' || domArray[-1] === '.' || domArray[0] === '-' || domArray[-1] === '-' || dom.indexOf('..') > -1) {
+        console.log("found illegal char 138", dom, dom.indexOf('..'));
+        result = false;
+      } else {
+        dom
+          .split('.')
+          .forEach(word => {
+            console.log(word)
+            if (word[0] === '-' || word[word.length - 1] === '-') {
+              console.log("found illegal char 143, -")
+              result = false
+            }
+          })
+
+        if (result === true) {
+          console.log("passed inspection")
+        }
+        return result
+      }
+    }
+
+    //DOMAIN CHECKS first check for length
+    if (domainName.length < 2 || tld.length < 2) {
+      console.log(`${email}'s domain name (${domainName}) or top level domain (${tld})  has less than the required two chars`)
+      return {message: `${email}'s domain has less than the required two chars`, outcome: false}
+    } else {
+      // length is OK, check for chars OK check for valid TLD length, domain has at
+      // least 2 charachters uppercase and lowercase Latin letters A to Z and a to z;
+      // digits 0 to 9, provided that top-level domain names are not all-numeric;
+      // hyphen -, provided that it is not the first or last character. check to see
+      // that the domain and TLD only have alphanumeric
+      //
+      // all of this is accomplished from the function domainValidChar
+      if (!domainValidChar(domain)) {
+        console.log(`${email}'s domain contains a non-allowed charachter or a charachter in a not allowed position`)
+        return {message: `${email}'s domain contains a non-allowed charachter or a charachter in a not allowed position`, outcome: false}
+      }
+    }
+
+    // if email passes above rules but has a comment, it sends this message with a
+    // warning
     if (comment) {
       console.log(`${email} contains comments`)
-      // TO ADD, check for valid charachters outside the comment
       return {message: `${email}'s is technically valid, but contains comments`, outcome: true}
     }
+
+    //success!
     return {message: `${email}'s is valid`, outcome: true}
   } else {
+
+    //failure on type
     console.log(typeof email)
     return {message: `${email}'s is not a string or is undefined`, outcome: false}
   }
@@ -136,6 +191,9 @@ class App extends Component {
       <Grid>
         <Grid container style={style.paper}>
           <Paper style={style.paper}>
+            <h4>
+              This uses no regex or HTML5 validators, only raw javascript inside a react UI
+            </h4>
             <Grid item xs={6} style={style.paper}>
               <label>
                 <h2>Enter your email address to be validated:</h2>
