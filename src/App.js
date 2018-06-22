@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Grid, Paper, Button} from '@material-ui/core';
+import {Grid, Paper, Button, Input} from '@material-ui/core';
 import 'typeface-roboto';
 import Valid from './components/valid';
 import validChars from './validChars'
@@ -22,12 +22,12 @@ const validation = email => {
     console.log(`${email} received in validation, has content, is string`);
 
     // does the email contain an @ sign, and it only has two parts. This is here
-    // before the variables (breaking style because it is quicker to do a check on
-    // large errors before parsing)
+    // before the variables  style because it is quicker to do a check on large
+    // errors before parsing and possibly breaking the code
 
     if (email.split('@').length !== 2) {
       console.log(`${email} does not contain 2 parts`);
-      return {message: `${email} does not contain 2 parts`, outcome: false}
+      return {message: `${email} does not contain 2 parts`, outcome: false, result: "failure"}
     }
 
     // does the email contain comments? if so, strip them off and change the current
@@ -65,20 +65,10 @@ const validation = email => {
         .length - 1
     ];
 
-    // MAIN RULES BODY  make sure the localName has at least 1 char but less than 64
-    if (localName.split('').length < 1) {
-      console.log(' localName less than one letter');
-      return {message: `${email}'s local name (username) has less than one charachter`, outcome: false}
-    }
-    if (localName.split('').length > 63) {
-      console.log(' localName has too many chars');
-      return {message: `${email}'s local name (username) has too many chars, must be less than 64`, outcome: false}
-    }
-
-    // make sure the domain has at least 1 dot
+    // MAIN RULES BODY make sure the domain has at least 1 dot
     if (domain.split('.').length < 2) {
       console.log('domain less than one dot');
-      return {message: `${email}'s domain has less than one dot`, outcome: false}
+      return {message: `${email}'s domain has less than one dot`, outcome: false, result: "failure"}
     }
 
     // function to check for valid charachters in usernames check for valid
@@ -119,7 +109,7 @@ const validation = email => {
     //DOMAIN CHECKS first check for length
     if (domainName.length < 2 || tld.length < 2) {
       console.log(`${email}'s domain name (${domainName}) or top level domain (${tld})  has less than the required two chars`)
-      return {message: `${email}'s domain has less than the required two chars`, outcome: false}
+      return {message: `${email}'s domain has less than the required two chars`, outcome: false, result: "failure"}
     } else {
       // length is OK, check for chars OK check for valid TLD length, domain has at
       // least 2 charachters uppercase and lowercase Latin letters A to Z and a to z;
@@ -130,49 +120,44 @@ const validation = email => {
       // all of this is accomplished from the function domainValidChar
       if (!domainValidChar(domain)) {
         console.log(`${email}'s domain contains a non-allowed charachter or a charachter in a not allowed position`)
-        return {message: `${email}'s domain contains a non-allowed charachter or a charachter in a not allowed position`, outcome: false}
+        return {message: `${email}'s domain contains a non-allowed charachter or a charachter in a not allowed position`, outcome: false, result: "failure"}
       }
     }
 
+    //USERNAME CHECKS!
+    //
+    //make sure the localName has at least 1 char but less than 64
+    if (localName.split('').length < 1) {
+      console.log(' localName less than one letter');
+      return {message: `${email}'s local name (username) has less than one charachter`, outcome: false, result: "failure"}
+    }
+    if (localName.split('').length > 63) {
+      console.log(' localName has too many chars');
+      return {message: `${email}'s local name (username) has too many chars, must be less than 64`, outcome: false, result: "failure"}
+    }
+
+    const userNameValidator = (name) => {}
     // if email passes above rules but has a comment, it sends this message with a
     // warning
     if (comment) {
       console.log(`${email} contains comments`)
-      return {message: `${email}'s is technically valid, but contains comments`, outcome: true}
+      return {message: `${email}'s is technically valid, but contains comments`, outcome: true, result: "warning"}
     }
 
     //success!
-    return {message: `${email}'s is valid`, outcome: true}
+    return {message: `${email}'s is valid`, outcome: true, result: "success"}
   } else {
 
     //failure on type
     console.log(typeof email)
-    return {message: `${email}'s is not a string or is undefined`, outcome: false}
+    return {message: `${email}'s is not a string or is undefined`, outcome: false, result: "failure"}
   }
 };
-
-// check to see that the username (local-part) consists of legal charachters:
-// alphanumerics digits 0-9 special characters !#$%&'*+-/=?^_`{|}~; dot .,
-// provided that it is not the first or last character unless quoted, and
-// provided also that it does not appear consecutively unless quoted (e.g.
-// John..Doe@example.com is not allowed but "John..Doe"@example.com is allowed);
-// space and "(),:;<>@[\] characters are allowed with restrictions (they are
-// only allowed inside a quoted string, as described in the paragraph below, and
-// in addition, a backslash or double-quote must be preceded by a backslash);
-// comments are allowed with parentheses at either end of the local-part; e.g.
-// john.smith(comment)@example.com and (comment)john.smith@example.com are both
-// equivalent to john.smith@example.com. check to see that the domain consists
-// of legal format and charachters has at least 1 charachter and the top level
-// domain has at least 2 charachters uppercase and lowercase Latin letters A to
-// Z and a to z; digits 0 to 9, provided that top-level domain names are not
-// all-numeric; hyphen -, provided that it is not the first or last character.
-// check to see that the domain and TLD only have alphanumeric charachters
 
 class App extends Component {
   state = {
     validate: '',
-    validation: null,
-    //validateMessage: ""
+    validation: null
   };
 
   validateChangeHandler = event => {
