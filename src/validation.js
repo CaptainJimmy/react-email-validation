@@ -63,60 +63,6 @@ const validation = email => {
       };
     }
 
-    // here we are defining the function to check for valid
-    // charachters in domain and TLD
-    //
-
-    const domainValidChar = dom => {
-      const domArray = dom.split('');
-      let result = true;
-
-      domArray.forEach(letter => {
-        if (validChars.domain.normal.indexOf(letter.toLowerCase()) < 0) {
-          //illegal character found, because the letter is not found in the array
-          result = false;
-        }
-      });
-      //check for illegal chars in the first or last position of the domain or TLD
-      if (
-        domArray[0] === '.' ||
-        domArray[-1] === '.' ||
-        domArray[0] === '-' ||
-        domArray[-1] === '-' ||
-        dom.indexOf('..') > -1
-      ) {
-        result = false;
-      } else {
-        dom.split('.').forEach(word => {
-          console.log(word);
-          if (word[0] === '-' || word[word.length - 1] === '-') {
-            console.log('found illegal char 101');
-            result = false;
-          }
-        });
-        dom.split('.').forEach(word => {
-          let numberCounter = 0;
-          word.split('').forEach(letter => {
-            if (validChars.domain.numeric.includes(letter)) {
-              console.log('found number');
-              numberCounter++;
-            }
-          });
-          if (numberCounter === word.length) {
-            console.log('Its all numbers!');
-            result = false;
-          }
-        });
-
-        if (result) {
-          console.log('passed inspection');
-        } else {
-          console.log('failed');
-        }
-        return result;
-      }
-    };
-
     //DOMAIN CHECKS first check for length of TLD and domain name to be less than 2
 
     if (domainName.length < 2 || tld.length < 2) {
@@ -148,6 +94,50 @@ const validation = email => {
       }
     }
 
+    // here we are defining the function to check for valid
+    // charachters in domain and TLD
+    //
+
+    function domainValidChar(dom) {
+      const domArray = dom.split('');
+      let result = true;
+
+      domArray.forEach(letter => {
+        if (validChars.domain.normal.indexOf(letter.toLowerCase()) < 0) {
+          //illegal character found, because the letter is not found in the array
+          result = false;
+        }
+      });
+      //check for illegal chars in the first or last position of the domain or TLD
+      if (
+        domArray[0] === '.' ||
+        domArray[-1] === '.' ||
+        domArray[0] === '-' ||
+        domArray[-1] === '-' ||
+        dom.indexOf('..') > -1
+      ) {
+        result = false;
+      } else {
+        dom.split('.').forEach(word => {
+          if (word[0] === '-' || word[word.length - 1] === '-') {
+            result = false;
+          }
+        });
+        dom.split('.').forEach(word => {
+          let numberCounter = 0;
+          word.split('').forEach(letter => {
+            if (validChars.domain.numeric.includes(letter)) {
+              numberCounter++;
+            }
+          });
+          if (numberCounter === word.length) {
+            result = false;
+          }
+        });
+        return result;
+      }
+    }
+
     //USERNAME CHECKS!
     //
     //make sure the localName has at least 1 char but less than 64
@@ -167,8 +157,18 @@ const validation = email => {
         result: 'failure'
       };
     }
+    if (!userNameValidator(localName)) {
+      console.log(
+        `${email}'s username/localName contains a non-allowed character or a character in a not allowed position`
+      );
+      return {
+        message: `${email}'s username contains a non-allowed character or a character in a not allowed position`,
+        outcome: false,
+        result: 'failure'
+      };
+    }
 
-    const userNameValidator = name => {
+    function userNameValidator(name) {
       const nameArray = name.split('');
       const quoteCheck = nameArray.filter(charachter => {
         return charachter === '"';
@@ -214,23 +214,6 @@ const validation = email => {
           });
         });
       }
-      if (result) {
-        console.log('passed inspection');
-      } else {
-        console.log('failed inspection');
-      }
-      return result;
-    };
-
-    if (!userNameValidator(localName)) {
-      console.log(
-        `${email}'s username/localName contains a non-allowed character or a character in a not allowed position`
-      );
-      return {
-        message: `${email}'s username contains a non-allowed character or a character in a not allowed position`,
-        outcome: false,
-        result: 'failure'
-      };
     }
 
     // if email passes above rules but has a comment, it sends this message with a
