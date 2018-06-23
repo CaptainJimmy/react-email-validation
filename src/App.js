@@ -80,7 +80,7 @@ const validation = email => {
       let result = true;
 
       domArray.forEach(letter => {
-        if (validChars.domain.indexOf(letter.toLowerCase()) < 0) {
+        if (validChars.domain.normal.indexOf(letter.toLowerCase()) < 0) {
           console.log('found illegal char');
           result = false;
         }
@@ -92,19 +92,34 @@ const validation = email => {
         domArray[-1] === '-' ||
         dom.indexOf('..') > -1
       ) {
-        console.log('found illegal char 138', dom, dom.indexOf('..'));
+        console.log('found illegal char 95', dom, dom.indexOf('..'));
         result = false;
       } else {
         dom.split('.').forEach(word => {
           console.log(word);
           if (word[0] === '-' || word[word.length - 1] === '-') {
-            console.log('found illegal char 143, -');
+            console.log('found illegal char 101');
+            result = false;
+          }
+        });
+        dom.split('.').forEach(word => {
+          let numberCounter = 0;
+          word.split('').forEach(letter => {
+            if (validChars.domain.numeric.includes(letter)) {
+              console.log('found number');
+              numberCounter++;
+            }
+          });
+          if (numberCounter === word.length) {
+            console.log('Its all numbers!');
             result = false;
           }
         });
 
-        if (result === true) {
+        if (result) {
           console.log('passed inspection');
+        } else {
+          console.log('failed');
         }
         return result;
       }
