@@ -1,10 +1,17 @@
 # react-email-validation
 
-An email validation application using React, no regex or filters
+An email validation application using React, no regex or filters. The validator is portable and can be used in a React or a Node environment.
 
 ## Explanation:
 
 This is actually two different components that are not necessarily dependent, and could easily be separated and reused.
+
+## Packages Used:
+
+[*] create-react-app
+[*] Jest test suite
+[*] React 16
+[*] material-ui
 
 ### Deployment:
 
@@ -18,9 +25,10 @@ The console/UI is built with React, Material UI, create-react-app. It is a simpl
 
 The algorithm is built to be portable, reusable, and modular. It is meant to be imported into a React application through import or as a require in a node application. The code is well commented, but the API is listed below. Since the module does not use regex, an series of arrays of legal charachters is used to validated the different portions of an email.
 
-The validation portion contains two files:
+The validation portion contains two files, and one Jest testing case:
 _validation.js:_ the main module
 _validChars.js:_ the validation array tables used for comparison.
+_validation.test.js_ the test portion of the application
 
 ##### Installing the entire application
 
@@ -64,6 +72,12 @@ _In your Node application:_
 
 ```javascript
 const validate = require('./validation.js');
+```
+
+_Testing:_
+
+```shell
+$ jest validate.test.js
 ```
 
 ##### Algorithm API

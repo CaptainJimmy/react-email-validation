@@ -216,6 +216,9 @@ const validation = email => {
         result = false;
       }
     });
+    if (name.includes('..')) {
+      result = false;
+    }
     //check for presence of quotes.  Two quotes "" is has other charachters that are allowed inside quotes, such as spaces.  A single quote without a matching partner is not allowed, so the previous algo will detect it.
     if (quoteCheck.length === 2) {
       let beforeOpenQuote = name.split('"')[0];
