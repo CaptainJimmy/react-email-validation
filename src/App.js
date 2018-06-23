@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Paper, Button, Input, Slide } from '@material-ui/core';
+import { Grid, Paper, Button, Input } from '@material-ui/core';
 import 'typeface-roboto';
 import Valid from './components/valid';
 import validation from './validation';
@@ -54,9 +54,7 @@ class App extends Component {
               Validate Me!
             </Button>
             {this.state.validation ? (
-              <Slide direction={'right'}>
-                <Valid validation={this.state.validation} />
-              </Slide>
+              <Valid validation={this.state.validation} />
             ) : null}
           </Paper>
         </Grid>
