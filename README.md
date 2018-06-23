@@ -4,7 +4,7 @@ An email validation application using React, no regex or filters
 
 ## Explanation:
 
-This is actually two different components that are not necessarily, and could easily be separated and reused.
+This is actually two different components that are not necessarily dependent, and could easily be separated and reused.
 
 ### Deployment:
 
@@ -25,48 +25,61 @@ _validChars.js:_ the validation array tables used for comparison.
 ##### Installing the entire application
 
 _Clone the repo:_
-```$ git clone https://github.com/CaptainJimmy/react-email-validation.git```
+`$ git clone https://github.com/CaptainJimmy/react-email-validation.git`
 
 _Install the dependencies_
-``` shell
+
+```shell
 $ cd react-email-validation
 $ npm install
 ```
 
 _Start the React Dev Server_
-```$ npm start```
+`$ npm start`
 
 ##### Using the the module only
 
 _Clone the repo:_
-``` shell
+
+```shell
 $ git clone https://github.com/CaptainJimmy/react-email-validation.git
 ```
 
-_Move the module files into your application_
-``` shell
+_*Move the module files into your application*_
+
+```shell
 $ cd react-email-validation
 $ cp validation.js /your/new/path/here
 $ cp validChars.js /your/new/path/here
 ```
 
-_Import the module into a React or similar application_
-In your React application:
-```import validate from './validation.js'```
+_*Import the module into a React or similar application*_
+_In your React application:_
 
-In your Node application:
-```const validate = require('./validation.js')```
+```javascript
+import validate from './validation.js';
+```
+
+_In your Node application:_
+
+```javascript
+const validate = require('./validation.js');
+```
 
 ##### Algorithm API
 
 To interact with the algorithm, simply send it the email string to validate:
-```validate(email)```
+
+```javascript
+validate(email);
+```
 
 validate will return an object with 3 properties:
-_message:_ (String) for displaying in a UI or CLI
-_outcome:_ (Boolean)
-_result:_ (String) contains success, failure, or warning, for content or component styling
 
-#### Email Standards Definistion
+> _message:_ (String) for displaying in a UI or CLI
+> _outcome:_ (Boolean)
+> _result:_ (String) contains success, failure, or warning, for content or component styling
 
-[Email Standards Wiki:](https://en.wikipedia.org/wiki/Email_address)
+#### Email Standards Definition
+
+[Email Standards Wiki: https://en.wikipedia.org/wiki/Email_address ](https://en.wikipedia.org/wiki/Email_address)
