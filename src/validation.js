@@ -1,7 +1,20 @@
 const validChars = require('./validChars');
 
+// this algorithm is broken down into 3 main parts:
+//
+// Pre Parse Validation
+// some easy checks are done to weed out the larger mistakes such as no username, 2 @'s etc
+// if a comments field is found in either the domain or the username the comments are stripped out as to not create a false negative
+// Domain Name and TLD Validation
+// Make sure the domain adheres to the standard, does not contain illegal characters or illegal formatting such as all numbers in the domain or TLD
+//Chars are checked against an array of allowed characters.  All alphabetic chars are verified in lower case.
+// User Name (localname) Validation
+// make sure the localname adheres to the standard, does not contain illegal chars, adheres to length restrictions
+//if quotes are found they are stripped off because they adhere to different rules as long as there are two quotes and they are surrounding that char.  one quote is a failure because it is not to standard
+//Chars are checked against an array of allowed characters.  All alphabetic chars are verified in lower case.
+
 const validation = email => {
-  //make sure email has content and is a string
+  //make sure the email has content and is a string
   if (email && typeof email === 'string') {
     console.log(`${email} received in validation, has content, is string`);
 
@@ -19,27 +32,23 @@ const validation = email => {
     }
 
     // does the email contain comments? if so, strip them off and change the current
-    // working email to a comment less email for better parsing  This is more a
-    // setup for parsing than a rule
+    // working email to a comment less email for better parsing  This is done more as
+    // a setup for parsing than as a  rule
 
     let comment = '';
     let workingEmail = '';
     if (email.indexOf('(') !== -1 && email.indexOf(')') !== -1) {
-      console.log(`${email} contains comments`);
       let beforeOpenParen = email.split('(')[0];
       comment = email.split('(')[1].split(')')[0];
       let afterCloseParen = email.split(')')[1];
       workingEmail = beforeOpenParen + afterCloseParen;
-
-      console.log(
-        `Working email: ${workingEmail} post edit with a comment: ${comment} `
-      );
+      //email has comments
     } else {
-      console.log(`${email} contains no comments, setting it to workingEmail`);
+      //the email has no comments
       workingEmail = email;
     }
 
-    // reusable variables for quick reference l1ater
+    // reusable variables for quick reference later
     let localName = workingEmail.split('@')[0];
     let domain = workingEmail.split('@')[1];
     let domainName = domain.split('.')[domain.split('.').length - 2];
@@ -47,7 +56,6 @@ const validation = email => {
 
     // MAIN RULES BODY make sure the domain has at least 1 dot
     if (domain.split('.').length < 2) {
-      console.log('domain less than one dot');
       return {
         message: `${email}'s domain has less than one dot`,
         outcome: false,
@@ -55,7 +63,7 @@ const validation = email => {
       };
     }
 
-    // function to check for valid charachters in usernames check for valid
+    // here we are defining the function to check for valid
     // charachters in domain and TLD
     //
 
@@ -65,10 +73,11 @@ const validation = email => {
 
       domArray.forEach(letter => {
         if (validChars.domain.normal.indexOf(letter.toLowerCase()) < 0) {
-          console.log('found illegal char');
+          //illegal character found, because the letter is not found in the array
           result = false;
         }
       });
+      //check for illegal chars in the first or last position of the domain or TLD
       if (
         domArray[0] === '.' ||
         domArray[-1] === '.' ||
@@ -76,7 +85,6 @@ const validation = email => {
         domArray[-1] === '-' ||
         dom.indexOf('..') > -1
       ) {
-        console.log('found illegal char 95', dom, dom.indexOf('..'));
         result = false;
       } else {
         dom.split('.').forEach(word => {
