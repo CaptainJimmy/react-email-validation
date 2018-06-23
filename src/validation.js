@@ -221,12 +221,11 @@ const validation = email => {
       result = false;
     }
     //check for presence of quotes.  Two quotes "" is has other charachters that are allowed inside quotes, such as spaces.  A single quote without a matching partner is not allowed, so the previous algo will detect it.
-    if (quoteCheck.length === 2) {
+    if (quoteCheck.length >= 2) {
       let beforeOpenQuote = name.split('"')[0];
-      let afterOpenQuote = name.split('"')[2];
+      let afterOpenQuote = name.split('"')[name.split('"').length - 1];
       let quote = name.split('"')[1];
       let nameNoQuotes = beforeOpenQuote + afterOpenQuote;
-
       //reset the result flag so we dont' get a false negative
       result = true;
       quote.split('').forEach(letter => {
@@ -234,7 +233,12 @@ const validation = email => {
           validChars.user.onlyInQuotes.indexOf(letter.toLowerCase()) < 0 &&
           validChars.user.normal.indexOf(letter.toLowerCase()) < 0
         ) {
-          result = false;
+          if (nameNoQuotes.length === 0) {
+            //the entire name is encased in quotes, which is technically allowed
+            result = true;
+          } else {
+            result = false;
+          }
         }
         nameNoQuotes.split('').forEach(letter => {
           if (validChars.user.normal.indexOf(letter.toLowerCase()) < 0) {

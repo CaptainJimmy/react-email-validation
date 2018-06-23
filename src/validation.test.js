@@ -13,7 +13,10 @@ const goodEmails = [
   'fully-qualified-domain@example.com',
   'user.name+tag+sorting@example.com',
   'x@example.com',
-  'example-indeed@strange-example.com'
+  'example-indeed@strange-example.com',
+  '"very.(),:;<>[]".VERY."very\\ "very".unusual"@strange.example.com',
+  "#!$%&'*+-/=?^_`{}|~@example.org",
+  'ema#@email.com'
 ];
 
 goodEmails.forEach(email => {
@@ -31,7 +34,6 @@ goodEmails.forEach(email => {
 const badEmails = [
   'email@em$ail.com',
   'email(comment@email.com',
-  'ema#@email.com',
   '@email.com',
   'email@3333.33',
   'email@email',
