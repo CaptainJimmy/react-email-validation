@@ -25,7 +25,7 @@ _validChars.js:_ the validation array tables used for comparison.
 ##### Installing the entire application
 
 _Clone the repo:_
-`$ git clone https://github.com/CaptainJimmy/react-email-validation.git`
+```$ git clone https://github.com/CaptainJimmy/react-email-validation.git```
 
 _Install the dependencies_
 ``` shell
