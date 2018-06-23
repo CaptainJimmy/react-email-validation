@@ -28,33 +28,39 @@ _Clone the repo:_
 `$ git clone https://github.com/CaptainJimmy/react-email-validation.git`
 
 _Install the dependencies_
+``` shell
 $ cd react-email-validation
 $ npm install
+```
 
 _Start the React Dev Server_
-`$ npm start`
+```$ npm start```
 
 ##### Using the the module only
 
 _Clone the repo:_
-`$ git clone https://github.com/CaptainJimmy/react-email-validation.git`
+``` shell
+$ git clone https://github.com/CaptainJimmy/react-email-validation.git
+```
 
 _Move the module files into your application_
+``` shell
 $ cd react-email-validation
 $ cp validation.js /your/new/path/here
 $ cp validChars.js /your/new/path/here
+```
 
 _Import the module into a React or similar application_
 In your React application:
-`import validate from './validation.js'`
+```import validate from './validation.js'```
 
 In your Node application:
-`const validate = require('./validation.js')`
+```const validate = require('./validation.js')```
 
 ##### Algorithm API
 
 To interact with the algorithm, simply send it the email string to validate:
-`validate(email)`
+```validate(email)```
 
 validate will return an object with 3 properties:
 _message:_ (String) for displaying in a UI or CLI
