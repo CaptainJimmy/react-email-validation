@@ -28,7 +28,12 @@ const validChars = require('./validChars');
 //Chars are checked against an array of allowed characters.  All alphabetic chars are verified in lower case.
 
 const validation = email => {
+  //
+  //Pre Parse Validation
+  //======================
+  //
   //make sure email has content and is a string
+
   if (email && typeof email === 'string') {
     // does the email contain an @ sign?, Does it it only have two parts? This is
     // here before the variables because it is quicker to do a check on large errors
@@ -42,8 +47,8 @@ const validation = email => {
       };
     }
 
-    // does the email contain comments? if so, strip them off and change the current
-    // working email to a comment less email for better parsing  This is more a
+    // does the email contain comments? if so, strip the comments off and change the current
+    // working email to a comment-less email for better parsing  This is more a
     // setup for parsing than a rule
 
     let comment = '';
@@ -57,13 +62,18 @@ const validation = email => {
       workingEmail = email;
     }
 
-    // reusable variables for quick reference l1ater
+    // parsed reusable variables for quick reference later
     let localName = workingEmail.split('@')[0];
     let domain = workingEmail.split('@')[1];
     let domainName = domain.split('.')[domain.split('.').length - 2];
     let tld = domain.split('.')[domain.split('.').length - 1];
-
-    // MAIN RULES BODY make sure the domain has at least 1 dot
+    //
+    //
+    // MAIN RULES BODY
+    //================
+    //
+    //
+    //make sure the domain has at least 1 dot
     if (domain.split('.').length < 2) {
       return {
         message: `${email}'s domain has less than one dot`,
@@ -72,10 +82,10 @@ const validation = email => {
       };
     }
 
-    // function to check for valid charachters in usernames check for valid
-    // charachters in domain and TLD
     //
-    //DOMAIN CHECKS first check for length of TLD and domain name to be less than 2
+    //DOMAIN CHECKS
+    //==============
+    // first check for length of TLD and domain name to be less than 2 chars
 
     if (domainName.length < 2 || tld.length < 2) {
       return {
@@ -84,12 +94,10 @@ const validation = email => {
         result: 'failure'
       };
     } else {
-      // domain has at least 2 charachters uppercase and lowercase Latin letters A to
-      // Z and a to z; digits 0 to 9, provided that top-level domain names are not
-      // all-numeric; hyphen -, provided that it is not the first or last character.
-      // check to see that the domain and TLD only have alphanumeric
       //
-      // all of this is accomplished from the function domainValidChar
+
+      //The reference below calls domainValidChar function, which checks for most of the
+      // rules applicable to domain  and returns a boolean
 
       if (!domainValidChar(domain)) {
         return {
@@ -98,6 +106,12 @@ const validation = email => {
           result: 'failure'
         };
       }
+
+      // The function domainValidChar below makes sure the domain has at least 2 charachters uppercase and lowercase Latin letters A to
+      // Z and a to z; digits 0 to 9, provided that  domain names are not
+      // all-numeric; hyphen -, provided that it is not the first or last character.
+      // it also check to see that the domain and TLD only have alphanumeric chars. It returns a boolean for pass/fail
+      //
       function domainValidChar(dom) {
         const domArray = dom.split('');
         let result = true;
@@ -138,6 +152,7 @@ const validation = email => {
     }
 
     //USERNAME CHECKS!
+    //=================
     //
     //make sure the localName has at least 1 char but less than 64
     if (localName.length < 1) {
@@ -154,7 +169,8 @@ const validation = email => {
         result: 'failure'
       };
     }
-
+    //The reference below calls userNameValidator function, which checks for most of the
+    // rules applicable to username legal and illegal chars and returns a boolean
     if (!userNameValidator(localName)) {
       return {
         message: `${email}'s username contains a non-allowed character or a character in a not allowed position`,
@@ -183,9 +199,10 @@ const validation = email => {
       result: 'failure'
     };
   }
-  //username validator checks for illegal characters by comparing the letters against an array, and checks for the presence of quotes.
+  //The function below, userNameValidator checks for illegal characters by comparing the letters against an array, and checks for the presence of quotes.
   //quotes are allowed in the user name provided there are 2 of them.  the content of the quotes is compared against a different array,
-  // making sure the characters inside the quotes are legal
+  // making sure the characters inside the quotes are legal.  The function returns a boolean for pass/fall
+
   function userNameValidator(name) {
     const nameArray = name.split('');
     const quoteCheck = nameArray.filter(charachter => {
@@ -205,10 +222,9 @@ const validation = email => {
       let afterOpenQuote = name.split('"')[2];
       let quote = name.split('"')[1];
       let nameNoQuotes = beforeOpenQuote + afterOpenQuote;
-      //reset the result flag so we dont' get a false negative
 
+      //reset the result flag so we dont' get a false negative
       result = true;
-      //console.log(beforeOpenQuote, afterOpenQuote, quote);
       quote.split('').forEach(letter => {
         if (
           validChars.user.onlyInQuotes.indexOf(letter.toLowerCase()) < 0 &&
