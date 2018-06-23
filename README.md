@@ -77,7 +77,9 @@ validate(email);
 validate will return an object with 3 properties:
 
 > _message:_ (String) for displaying in a UI or CLI
+>
 > _outcome:_ (Boolean)
+>
 > _result:_ (String) contains success, failure, or warning, for content or component styling
 
 #### Email Standards Definition
