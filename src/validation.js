@@ -216,6 +216,7 @@ const validation = email => {
         result = false;
       }
     });
+    //check to make sure the email user name doesn't contain double dots
     if (name.includes('..')) {
       result = false;
     }
