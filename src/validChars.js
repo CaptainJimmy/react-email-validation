@@ -82,7 +82,7 @@ const validChars = {
       '_'
     ],
     onlyInQuotes: [
-      '\"',
+      "\"",
       "(",
       ")",
       ":",

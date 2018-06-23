@@ -21,9 +21,9 @@ const validation = email => {
   if (email && (typeof email === 'string')) {
     console.log(`${email} received in validation, has content, is string`);
 
-    // does the email contain an @ sign, and it only has two parts. This is here
-    // before the variables  style because it is quicker to do a check on large
-    // errors before parsing and possibly breaking the code
+    // does the email contain an @ sign?, Does it it only have two parts? This is
+    // here before the variables because it is quicker to do a check on large errors
+    // before parsing and possibly breaking the code.
 
     if (email.split('@').length !== 2) {
       console.log(`${email} does not contain 2 parts`);
@@ -75,8 +75,8 @@ const validation = email => {
     // charachters in domain and TLD
     //
 
-    let domainValidChar = (dom) => {
-      let domArray = dom.split("")
+    const domainValidChar = (dom) => {
+      const domArray = dom.split("")
       let result = true
 
       domArray.forEach((letter) => {
@@ -106,18 +106,19 @@ const validation = email => {
       }
     }
 
-    //DOMAIN CHECKS first check for length
+    //DOMAIN CHECKS first check for length of TLD and domain name to be less than 2
+
     if (domainName.length < 2 || tld.length < 2) {
       console.log(`${email}'s domain name (${domainName}) or top level domain (${tld})  has less than the required two chars`)
       return {message: `${email}'s domain has less than the required two chars`, outcome: false, result: "failure"}
     } else {
-      // length is OK, check for chars OK check for valid TLD length, domain has at
-      // least 2 charachters uppercase and lowercase Latin letters A to Z and a to z;
-      // digits 0 to 9, provided that top-level domain names are not all-numeric;
-      // hyphen -, provided that it is not the first or last character. check to see
-      // that the domain and TLD only have alphanumeric
+      // domain has at least 2 charachters uppercase and lowercase Latin letters A to
+      // Z and a to z; digits 0 to 9, provided that top-level domain names are not
+      // all-numeric; hyphen -, provided that it is not the first or last character.
+      // check to see that the domain and TLD only have alphanumeric
       //
       // all of this is accomplished from the function domainValidChar
+
       if (!domainValidChar(domain)) {
         console.log(`${email}'s domain contains a non-allowed charachter or a charachter in a not allowed position`)
         return {message: `${email}'s domain contains a non-allowed charachter or a charachter in a not allowed position`, outcome: false, result: "failure"}
@@ -136,7 +137,27 @@ const validation = email => {
       return {message: `${email}'s local name (username) has too many chars, must be less than 64`, outcome: false, result: "failure"}
     }
 
-    const userNameValidator = (name) => {}
+    const userNameValidator = (name) => {
+      const nameArray = name.split("")
+      let result = true
+      nameArray.forEach((letter) => {
+        if (validChars.user.normal.indexOf(letter.toLowerCase()) < 0) {
+          console.log("found illegal char")
+          result = false
+        }
+      })
+
+      if (result === true) {
+        console.log("passed inspection")
+      }
+      return result
+    }
+
+    if (!userNameValidator(localName)) {
+      console.log(`${email}'s username/localName contains a non-allowed charachter or a charachter in a not allowed position`)
+      return {message: `${email}'s username contains a non-allowed charachter or a charachter in a not allowed position`, outcome: false, result: "failure"}
+    }
+
     // if email passes above rules but has a comment, it sends this message with a
     // warning
     if (comment) {
